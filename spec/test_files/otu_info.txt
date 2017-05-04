@@ -1,0 +1,5 @@
+#acc	otu	clone	num
+seq1	otu1	1	23
+seq2	otu1	1	1
+seq3	otu1	1	1
+seq4	otu2	1	1

@@ -16,18 +16,12 @@
 # You should have received a copy of the GNU General Public License
 # along with ZetaHunter.  If not, see <http://www.gnu.org/licenses/>.
 
-require "bundler/setup"
-require "zeta_hunter"
+module ZetaHunter
+  module Error
+    class StandardError < Object::StandardError
+    end
 
-RSpec.configure do |config|
-  # Enable flags like --only-failures and --next-failure
-  config.example_status_persistence_file_path = ".rspec_status"
-
-  config.expect_with :rspec do |c|
-    c.syntax = :expect
+    class ArgumentError < StandardError
+    end
   end
-end
-
-module SpecHelper
-  TEST_FILE_D = File.join File.dirname(__FILE__), "test_files"
 end
