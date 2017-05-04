@@ -48,9 +48,11 @@ RSpec.describe ZetaHunter do
                   "seq4" => 0.0 } }
   end
 
+  let(:default_sim) { 99 }
+
   let(:auto_otu_sim) {
     { "otu1" => { mean: 70, min: 60 },
-      "otu2" => { mean: 97, min: 97 } }
+      "otu2" => { mean: default_sim, min: default_sim } }
   }
 
   describe "#parse_dist_file" do
@@ -72,7 +74,8 @@ RSpec.describe ZetaHunter do
 
   describe "#calc_auto_otu_sim" do
     it "returns mean and min similarity for OTU groups" do
-      expect(klass.calc_auto_otu_sim otu2seqs, dists).to eq auto_otu_sim
+      default_sim = 99
+      expect(klass.calc_auto_otu_sim otu2seqs, dists, default_sim).to eq auto_otu_sim
     end
   end
 
@@ -116,6 +119,14 @@ RSpec.describe ZetaHunter do
 
         expect(klass.find_otu_sim auto_otu_sim, type, seq2otu, seq).to eq sim
       end
+    end
+  end
+
+  describe "#clean_str" do
+    it "stips outer whitespace then replaces non _ or " +
+       "alphanumeric chars with a _" do
+      str = "   a'!\"3.*p(p) [a]  le  "
+      expect(klass.clean_str str).to eq "a_3_p_p_a_le"
     end
   end
 end

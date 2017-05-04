@@ -86,12 +86,12 @@ module ZetaHunter
     [otu2seqs, seq2otu]
   end
 
-  def calc_auto_otu_sim otus, dists
+  def calc_auto_otu_sim otus, dists, default_sim
     otu_sim_info = {}
     otus.each do |otu, seqs|
       if seqs.count == 1
-        mean_sim = 97
-        min_sim = 97
+        mean_sim = default_sim
+        min_sim = default_sim
       else
         in_otu_dists = []
         seqs.combination(2).each do |s1, s2|
@@ -116,19 +116,23 @@ module ZetaHunter
 
   def find_otu_sim auto_otu_sim, type, seq2otu, seq
     unless type == :mean || type == :min
-      raise Error::ArgumentError
+      raise Error::ArgumentError, "Incorrect type (#{type})"
     end
 
     unless seq2otu.has_key? seq
-      raise Error::ArgumentError
+      raise Error::ArgumentError, "seq '#{seq}' is not in seq2otu.keys"
     end
 
     otu = seq2otu[seq]
 
     unless auto_otu_sim.has_key? otu
-      raise Error::StandardError
+      raise Error::StandardError, "otu '#{otu}' is not in auto_otu_sim.keys"
     end
 
     auto_otu_sim[otu][type]
+  end
+
+  def clean_str str
+    str.strip.gsub(/[^\p{Alnum}_]+/, "_").gsub(/_+/, "_")
   end
 end
